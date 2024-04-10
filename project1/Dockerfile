@@ -7,9 +7,14 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
+
+# Copy the project file separately to leverage Docker caching
 COPY ["project1/project1.csproj", "project1/"]
 RUN dotnet restore "project1/project1.csproj"
+
+# Copy the rest of the application code
 COPY . .
+
 WORKDIR "/src/project1"
 RUN dotnet build "project1.csproj" -c Release -o /app/build
 
